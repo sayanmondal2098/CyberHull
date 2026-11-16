@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cyberhull"
+version = "0.1.0"
+description = "Reproducible feature-grouped convex hull URL record classification"
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.26,<3", "pandas>=2.2,<4", "scipy>=1.12,<2", "scikit-learn>=1.5,<2"]
+
+[project.optional-dependencies]
+notebooks = ["jupyterlab", "matplotlib", "plotly", "seaborn", "ipywidgets", "nbformat"]
+test = ["pytest>=8,<10"]
+
+[project.scripts]
+cyberhull = "cyberhull.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["cyberhull*"]
