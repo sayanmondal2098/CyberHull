@@ -30,17 +30,20 @@ in the real world. Predictions include the one-based IDs of all violated vaults.
 
 ## Real dataset status (recovered)
 
+The local dataset lives in `data/`. See [data/README.md](data/README.md) for
+download and checksum verification instructions.
+
 Upstream `final_merged.json` is a 26,967,679-byte Git LFS object with SHA-256
 `1a5275096c5f1130a2666a04e23ecc8542329c66cf50dd7fe063f90fddd372f4`.
 The LFS batch download returned HTTP 404 during initial setup. The actual file was
 subsequently recovered from GitHub's media endpoint and verified against that
-SHA-256. `final_merged.json` now contains all 1,674 original records (204 legitimate
+SHA-256. `data/final_merged.json` now contains all 1,674 original records (204 legitimate
 and 1,470 phishing), stored directly in Git rather than as an LFS pointer. The
 explicit `-filter` attribute prevents inherited LFS rules from replacing it with
 a pointer; `-text` preserves its exact checksum across platforms. Run:
 
 ```powershell
-.\.venv\Scripts\python.exe -m cyberhull train --data final_merged.json --model results/runs/model.json
+.\.venv\Scripts\python.exe -m cyberhull train --data data/final_merged.json --model results/runs/model.json
 .\.venv\Scripts\python.exe -m cyberhull evaluate --data separate_labeled_records.json --model results/runs/model.json
 .\.venv\Scripts\jupyter-lab.exe notebooks/Auto_FGSH_Dynamic_Engine.ipynb
 ```
@@ -51,8 +54,8 @@ https://media.githubusercontent.com/media/AniketGhosal/CyberHull-URL-Detection/4
 To verify the local dataset in PowerShell:
 
 ```powershell
-Get-FileHash final_merged.json -Algorithm SHA256
-git check-attr filter -- final_merged.json
+Get-FileHash data/final_merged.json -Algorithm SHA256
+git check-attr filter -- data/final_merged.json
 ```
 
 The hash must match the value above and `filter` must be `unset`. Add and push the

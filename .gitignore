@@ -9,3 +9,4 @@ dist/
 results/runs/
 results/generated/
 examples/demo_records.json
+data/*.download

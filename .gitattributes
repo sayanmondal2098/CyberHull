@@ -1,2 +1,2 @@
 # Store the verified dataset directly in Git, without LFS or newline conversion.
-final_merged.json -filter -diff -merge -text
+data/final_merged.json -filter -diff -merge -text
