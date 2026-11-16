@@ -7,14 +7,14 @@ it without Git LFS. Local training uses `--data data/final_merged.json`.
 ## Download it again
 
 From the repository root, run this PowerShell snippet. It downloads from the
-upstream GitHub media endpoint at a fixed revision, checks the original SHA-256,
+dataset snapshot in this repository at a fixed revision, checks the original SHA-256,
 and only then places the file at `data/final_merged.json`. A failed download or
 checksum check leaves any existing dataset untouched.
 
 ```powershell
 $ErrorActionPreference = 'Stop'
 New-Item -ItemType Directory -Force data | Out-Null
-$datasetUrl = 'https://media.githubusercontent.com/media/AniketGhosal/CyberHull-URL-Detection/4ce352b35ac89d6c670481d4cb97db273aae5ab9/final_merged.json'
+$datasetUrl = 'https://raw.githubusercontent.com/sayanmondal2098/CyberHull/16c74a5/final_merged.json'
 $expectedHash = '1a5275096c5f1130a2666a04e23ecc8542329c66cf50dd7fe063f90fddd372f4'
 $downloadPath = Join-Path (Resolve-Path data).Path 'final_merged.json.download'
 Invoke-WebRequest -Uri $datasetUrl -OutFile $downloadPath
@@ -24,7 +24,7 @@ if ((Get-FileHash -LiteralPath $downloadPath -Algorithm SHA256).Hash.ToLowerInva
 Move-Item -LiteralPath $downloadPath -Destination data/final_merged.json -Force
 ```
 
-[Direct download from the original repository](https://media.githubusercontent.com/media/AniketGhosal/CyberHull-URL-Detection/4ce352b35ac89d6c670481d4cb97db273aae5ab9/final_merged.json).
+[Direct dataset download](https://raw.githubusercontent.com/sayanmondal2098/CyberHull/16c74a5/final_merged.json).
 
 Expected size: **26,967,679 bytes**. SHA-256:
 
@@ -32,10 +32,10 @@ Expected size: **26,967,679 bytes**. SHA-256:
 1a5275096c5f1130a2666a04e23ecc8542329c66cf50dd7fe063f90fddd372f4
 ```
 
-The upstream repository uses Git LFS. Its raw Git blob is only a small pointer;
-use the media download above to obtain the actual records. If GitHub returns an
-error, retain the verified local copy or request the original dataset from the
-upstream author. Do not substitute synthetic demonstration data for this file.
+The download URL uses the earlier verified snapshot, where the file was still at
+repository root. Save it under `data/` for the current project layout. If the download
+fails, retain the verified local copy. Do not substitute synthetic demonstration
+data for this file.
 
 ## Verify and train
 

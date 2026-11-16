@@ -1,10 +1,52 @@
 # Local CyberHull implementation
 
-Source: https://github.com/AniketGhosal/CyberHull-URL-Detection
-Imported revision: `4ce352b35ac89d6c670481d4cb97db273aae5ab9`.
-The original notebooks, figures, mappings, and README are retained. The existing
-local `origin` remote is preserved. The `cyberhull/` package is a new implementation
-of the active algorithm in cells 0 and 1 of `notebooks/Auto_FGSH_Dynamic_Engine.ipynb`.
+## One-command rerun
+
+```powershell
+.\.venv\Scripts\python.exe run_all.py --test
+```
+
+The single entry point reads `data/final_merged.json`, creates a stratified
+training/holdout split, trains and reloads the saved model, evaluates only the
+holdout, predicts all records, exports the vault mapping, plots the holdout
+confusion matrix, and runs tests. Omit `--test` to skip tests.
+
+Outputs in `results/runs/latest/`:
+
+- `model.json`: fitted geometric model.
+- `metrics.json`: configuration and held-out evaluation metrics.
+- `predictions.json`: predictions for all input records, including training rows.
+- `held_out_predictions.json`: predictions for held-out rows only.
+- `vault_mapping.csv`: feature pairs and core geometry details.
+- `confusion_matrix.png`: held-out confusion matrix.
+
+Defaults are resolved relative to `run_all.py`, so it can be launched from another
+directory. Explicit `--data` and `--output` paths are relative to your current
+directory. Use `--output results/runs/experiment-2` to keep separate runs; otherwise
+rerunning overwrites the same output files. Other options are `--seed`,
+`--test-size`, and `--core-fraction` (see `--help`).
+
+The runner covers the packaged pipeline, not every exploratory notebook cell.
+Notebook widgets, optional analyses, and Colab-specific cells remain interactive.
+
+### Generate the complete image set
+
+```powershell
+.\.venv\Scripts\python.exe run_all.py --all-images --test
+```
+
+`results/runs/latest/images/` contains one `vault_NN.png` per fitted vault,
+`all_vaults.png`, `top_vaults.png`, `vault_rejection_counts.png`, `pca_2d.png`,
+`pca_3d.png`, and the self-contained `interactive_3d.html`. `manifest.json` lists
+the generated files and PCA explained variance. With 46 vaults this produces 51
+PNGs plus HTML, in addition to the normal confusion matrix. With fewer than three
+active features, 3D outputs are omitted.
+
+Vault boundaries use the persisted model's core points. Scatter points are held-out
+records. Top vault selection uses training phishing rejection counts, and PCA fits
+only training features. The historical files under `results/reference/` are kept;
+this option regenerates visualizations of the current pipeline instead of running
+all exploratory notebook analyses or reproducing historical figures exactly.
 
 ## Setup (PowerShell)
 
@@ -47,9 +89,6 @@ a pointer; `-text` preserves its exact checksum across platforms. Run:
 .\.venv\Scripts\python.exe -m cyberhull evaluate --data separate_labeled_records.json --model results/runs/model.json
 .\.venv\Scripts\jupyter-lab.exe notebooks/Auto_FGSH_Dynamic_Engine.ipynb
 ```
-
-Recovery source:
-https://media.githubusercontent.com/media/AniketGhosal/CyberHull-URL-Detection/4ce352b35ac89d6c670481d4cb97db273aae5ab9/final_merged.json
 
 To verify the local dataset in PowerShell:
 
@@ -112,7 +151,7 @@ the upstream notebook's in-sample results; it does not reproduce its accuracy cl
 
 ## Local verification
 
-The 13 automated tests pass, covering polygon, line and point boundaries, feature
+The automated tests cover polygon, line and point boundaries, feature
 extraction, repeatable fitting, JSON model round trips, frozen vocabulary, malformed
 inputs, LFS pointer detection, and the train/predict/evaluate CLI workflow.
 The default synthetic demo produces 160 training records, 40 held-out records,
