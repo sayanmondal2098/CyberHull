@@ -1,7 +1,8 @@
 # CyberHull: Deterministic Malicious URL Isolation via Convex Hull Geometry
 
 **Local runnable implementation:** see [IMPLEMENTATION.md](IMPLEMENTATION.md) for
-setup, CLI commands, tests, and the upstream dataset availability issue.
+setup, CLI commands, tests, and dataset recovery details. The verified original
+`final_merged.json` is included directly in Git; Git LFS is not required for it.
 
 Welcome to the official repository for **CyberHull**, a multidimensional geometric threat-isolation framework. This repository contains the data and algorithmic implementations evaluated in our research.
 

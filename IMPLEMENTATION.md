@@ -28,19 +28,37 @@ New-Item -ItemType Directory -Force artifacts
 Demo data is deliberately synthetic. Its results do not validate phishing detection
 in the real world. Predictions include the one-based IDs of all violated vaults.
 
-## Real dataset status
+## Real dataset status (recovered)
 
 Upstream `final_merged.json` is a 26,967,679-byte Git LFS object with SHA-256
 `1a5275096c5f1130a2666a04e23ecc8542329c66cf50dd7fe063f90fddd372f4`.
-The LFS download returned HTTP 404 during setup. The imported file is therefore
-the original pointer, not usable JSON. Obtain the actual data from the author,
-replace that pointer, then run:
+The LFS batch download returned HTTP 404 during initial setup. The actual file was
+subsequently recovered from GitHub's media endpoint and verified against that
+SHA-256. `final_merged.json` now contains all 1,674 original records (204 legitimate
+and 1,470 phishing), stored directly in Git rather than as an LFS pointer. The
+explicit `-filter` attribute prevents inherited LFS rules from replacing it with
+a pointer; `-text` preserves its exact checksum across platforms. Run:
 
 ```powershell
 .\.venv\Scripts\python.exe -m cyberhull train --data final_merged.json --model artifacts/model.json
 .\.venv\Scripts\python.exe -m cyberhull evaluate --data separate_labeled_records.json --model artifacts/model.json
 .\.venv\Scripts\jupyter-lab.exe Auto_FGSH_Dynamic_Engine.ipynb
 ```
+
+Recovery source:
+https://media.githubusercontent.com/media/AniketGhosal/CyberHull-URL-Detection/4ce352b35ac89d6c670481d4cb97db273aae5ab9/final_merged.json
+
+To verify the local dataset in PowerShell:
+
+```powershell
+Get-FileHash final_merged.json -Algorithm SHA256
+git check-attr filter -- final_merged.json
+```
+
+The hash must match the value above and `filter` must be `unset`. Add and push the
+dataset using normal `git add`, `git commit`, and `git push`; no LFS upload or
+history rewrite is needed. GitHub's browser upload limit is smaller than this file,
+so use the Git CLI to upload it.
 
 The notebook extras support the core and PCA notebooks. The exploratory collection
 notebook has additional optional packages and Colab-specific cells; it is retained
@@ -86,7 +104,8 @@ Unknown prediction keywords are ignored; training fixes the keyword vocabulary.
 - Save models as versioned JSON containing feature names and core points; no pickle
   execution is needed to load them.
 
-No upstream accuracy claims have been reproduced because the dataset is unavailable.
+The original dataset is now available. Local held-out evaluation is distinct from
+the upstream notebook's in-sample results; it does not reproduce its accuracy claims.
 
 ## Local verification
 
@@ -97,3 +116,11 @@ The default synthetic demo produces 160 training records, 40 held-out records,
 eight active features and four vaults. Its holdout has 20 true positives, zero
 false negatives, five true negatives and 15 false positives (75% false-positive
 rate). This illustrates the strict any-vault rejection rule, not deployment quality.
+
+With the recovered original dataset and the default seed, the CLI trains on 1,339
+records with 91 active features and 46 vaults. The 335-record holdout yields 264
+true positives, 30 false negatives, 10 true negatives and 31 false positives:
+81.79% accuracy, 89.80% phishing recall, and 75.61% false-positive rate. This high
+false-positive rate means the classifier is not ready for automatic blocking.
+The fitted model and full metrics are saved locally under `artifacts/real-model.json`
+and `artifacts/real-metrics.json`; these generated outputs are ignored by Git.
