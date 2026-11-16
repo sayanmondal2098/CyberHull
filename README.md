@@ -4,12 +4,23 @@
 setup, CLI commands, tests, and dataset recovery details. The verified original
 `final_merged.json` is included directly in Git; Git LFS is not required for it.
 
+## Project layout
+
+- `cyberhull/`: Python package and CLI.
+- `notebooks/`: original research notebooks with project-relative input/output paths.
+- `results/reference/`: upstream plots, HTML visualization, and mapping tables.
+- `results/runs/`: local trained models, metrics, and predictions (Git-ignored).
+- `results/generated/`: notebook outputs (Git-ignored).
+- `docs/`: original pipeline document.
+- `examples/` and `tests/`: synthetic demo generator and automated checks.
+- `final_merged.json`: verified original dataset.
+
 Welcome to the official repository for **CyberHull**, a multidimensional geometric threat-isolation framework. This repository contains the data and algorithmic implementations evaluated in our research.
 
 ## 📌 Repository Contents
 * **`final_merged.json`**: The curated benchmarking dataset containing legitimate and zero-day phishing URL features.
-* **`Auto_FGSH_Dynamic_Engine.ipynb`**: The core Jupyter Notebook containing the Convex Hull boundary generation, optimization, and point-in-polyhedron testing logic.
-* **`PCA_Algorithm_Features.ipynb`**: The script used to generate the baseline Principal Component Analysis (PCA) comparison.
+* **`notebooks/Auto_FGSH_Dynamic_Engine.ipynb`**: The core Jupyter Notebook containing the Convex Hull boundary generation, optimization, and point-in-polyhedron testing logic.
+* **`notebooks/PCA_Algorithm_Features.ipynb`**: The script used to generate the baseline Principal Component Analysis (PCA) comparison.
 * **Visualizations & Proofs**: High-resolution 2D and 3D topographical visualizations of the geometric interception vaults (`.png` and `.html` formats).
 
 ## 🚀 Overview

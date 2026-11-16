@@ -4,7 +4,7 @@ Source: https://github.com/AniketGhosal/CyberHull-URL-Detection
 Imported revision: `4ce352b35ac89d6c670481d4cb97db273aae5ab9`.
 The original notebooks, figures, mappings, and README are retained. The existing
 local `origin` remote is preserved. The `cyberhull/` package is a new implementation
-of the active algorithm in cells 0 and 1 of `Auto_FGSH_Dynamic_Engine.ipynb`.
+of the active algorithm in cells 0 and 1 of `notebooks/Auto_FGSH_Dynamic_Engine.ipynb`.
 
 ## Setup (PowerShell)
 
@@ -19,9 +19,9 @@ py -3.13 -m venv .venv
 
 ```powershell
 .\.venv\Scripts\python.exe examples/make_demo.py
-New-Item -ItemType Directory -Force artifacts
-.\.venv\Scripts\python.exe -m cyberhull train --data examples/demo_records.json --model artifacts/model.json --output artifacts/metrics.json
-.\.venv\Scripts\python.exe -m cyberhull predict --data examples/demo_records.json --model artifacts/model.json --output artifacts/predictions.json
+New-Item -ItemType Directory -Force results/runs
+.\.venv\Scripts\python.exe -m cyberhull train --data examples/demo_records.json --model results/runs/model.json --output results/runs/metrics.json
+.\.venv\Scripts\python.exe -m cyberhull predict --data examples/demo_records.json --model results/runs/model.json --output results/runs/predictions.json
 .\.venv\Scripts\python.exe -m pytest -q
 ```
 
@@ -40,9 +40,9 @@ explicit `-filter` attribute prevents inherited LFS rules from replacing it with
 a pointer; `-text` preserves its exact checksum across platforms. Run:
 
 ```powershell
-.\.venv\Scripts\python.exe -m cyberhull train --data final_merged.json --model artifacts/model.json
-.\.venv\Scripts\python.exe -m cyberhull evaluate --data separate_labeled_records.json --model artifacts/model.json
-.\.venv\Scripts\jupyter-lab.exe Auto_FGSH_Dynamic_Engine.ipynb
+.\.venv\Scripts\python.exe -m cyberhull train --data final_merged.json --model results/runs/model.json
+.\.venv\Scripts\python.exe -m cyberhull evaluate --data separate_labeled_records.json --model results/runs/model.json
+.\.venv\Scripts\jupyter-lab.exe notebooks/Auto_FGSH_Dynamic_Engine.ipynb
 ```
 
 Recovery source:
@@ -122,5 +122,5 @@ records with 91 active features and 46 vaults. The 335-record holdout yields 264
 true positives, 30 false negatives, 10 true negatives and 31 false positives:
 81.79% accuracy, 89.80% phishing recall, and 75.61% false-positive rate. This high
 false-positive rate means the classifier is not ready for automatic blocking.
-The fitted model and full metrics are saved locally under `artifacts/real-model.json`
-and `artifacts/real-metrics.json`; these generated outputs are ignored by Git.
+The fitted model and full metrics are saved locally under `results/runs/real-model.json`
+and `results/runs/real-metrics.json`; these generated outputs are ignored by Git.
